@@ -7,8 +7,11 @@
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
+<!-- Firebase SDKs -->
 <script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-firestore.js"></script>
+
+<!-- Firebase Config & Init -->
 <script>
   const firebaseConfig = {
     apiKey: "AIzaSyDg0GqckIo6tzkE-P6r4-Kqrv8MJT60lIk",
@@ -19,9 +22,16 @@
     appId: "1:985351671931:web:f70309d9ebb5c2545312de",
     measurementId: "G-9ZC8CQ8QBW"
   };
+
+  // Initialize Firebase
   const app = firebase.initializeApp(firebaseConfig);
+
+  // ✅ Initialize Firestore
   const db = firebase.firestore();
 </script>
+
+<!-- Your main JS -->
+<script src="script.js"></script>
 <body>
     <nav class="navbar">
         <div class="nav-container">
