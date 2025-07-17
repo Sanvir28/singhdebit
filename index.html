@@ -7,6 +7,21 @@
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
+<script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-firestore.js"></script>
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyDg0GqckIo6tzkE-P6r4-Kqrv8MJT60lIk",
+    authDomain: "singhdebit-843f2.firebaseapp.com",
+    projectId: "singhdebit-843f2",
+    storageBucket: "singhdebit-843f2.firebasestorage.app",
+    messagingSenderId: "985351671931",
+    appId: "1:985351671931:web:f70309d9ebb5c2545312de",
+    measurementId: "G-9ZC8CQ8QBW"
+  };
+  const app = firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+</script>
 <body>
     <nav class="navbar">
         <div class="nav-container">
