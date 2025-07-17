@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SinghDebit - Debit Card Portal</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Loading overlay -->
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="loading-spinner"></div>
+        <p>Loading...</p>
+    </div>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <h1>SinghDebit</h1>
+            </div>
+            <div class="nav-links">
+                <button class="nav-btn" onclick="showPage('welcome')">Home</button>
+                <button class="nav-btn" onclick="showPage('card-check')">Check Balance</button>
+                <button class="nav-btn" onclick="showPage('user-login')">User Portal</button>
+                <button class="nav-btn" onclick="showPage('admin-login')">Admin</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <!-- Welcome Page -->
+        <section id="welcome-page" class="page active">
+            <div class="welcome-container">
+                <div class="welcome-hero">
+                    <h1>Welcome to SinghDebit</h1>
+                    <p class="hero-subtitle">Your trusted partner in digital banking - Powered by Singh Studios</p>
+                </div>
+                
+                <div class="welcome-content">
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <div class="feature-icon">🏦</div>
+                            <h3>Secure Banking</h3>
+                            <p>Advanced encryption and security measures to protect your financial information</p>
+                        </div>
+                        
+                        <div class="feature-card">
+                            <div class="feature-icon">💳</div>
+                            <h3>Card Management</h3>
+                            <p>Easily check your debit card balance and view transaction history</p>
+                        </div>
+                        
+                        <div class="feature-card">
+                            <div class="feature-icon">⚡</div>
+                            <h3>Instant Access</h3>
+                            <p>Real-time balance updates and immediate transaction processing</p>
+                        </div>
+                    </div>
+                    
+                    <div class="cta-section">
+                        <h2>Get Started</h2>
+                        <p>Check your debit card balance securely and instantly</p>
+                        <button class="cta-btn" onclick="showPage('card-check')">Check Your Balance</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Card Check Page -->
+        <section id="card-check-page" class="page">
+            <div class="form-container">
+                <div class="form-header">
+                    <h2>Check Your Card Balance</h2>
+                    <p>Enter your card details to view your current balance</p>
+                </div>
+                
+                <form id="card-form" class="card-form">
+                    <div class="form-group">
+                        <label for="card-number">Card Number</label>
+                        <input type="text" id="card-number" placeholder="1234 5678 9012 3456" maxlength="19" required>
+                        <div class="error-message" id="card-number-error"></div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="exp-month">Expiration Month</label>
+                            <select id="exp-month" required>
+                                <option value="">Month</option>
+                                <option value="01">01</option>
+                                <option value="02">02</option>
+                                <option value="03">03</option>
+                                <option value="04">04</option>
+                                <option value="05">05</option>
+                                <option value="06">06</option>
+                                <option value="07">07</option>
+                                <option value="08">08</option>
+                                <option value="09">09</option>
+                                <option value="10">10</option>
+                                <option value="11">11</option>
+                                <option value="12">12</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="exp-year">Expiration Year</label>
+                            <select id="exp-year" required>
+                                <option value="">Year</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="cvv">CVV</label>
+                        <input type="text" id="cvv" placeholder="123" maxlength="4" required>
+                        <div class="error-message" id="cvv-error"></div>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">
+                        <span class="btn-text">Check Balance</span>
+                        <span class="btn-loader" style="display: none;">
+                            <div class="spinner"></div>
+                        </span>
+                    </button>
+                </form>
+                
+                <div id="balance-display" class="balance-display" style="display: none;">
+                    <div class="card-info card-info-clickable" onclick="showBalanceCardDetails()">
+                        <h3>Card Information <span class="click-hint">(Click for details)</span></h3>
+                        <div class="card-details">
+                            <p><strong>Card Number:</strong> <span id="display-card-number"></span></p>
+                            <p><strong>Cardholder:</strong> <span id="display-cardholder"></span></p>
+                            <p><strong>Expiration:</strong> <span id="display-expiration"></span></p>
+                        </div>
+                    </div>
+                    
+                    <div class="balance-info">
+                        <h3>Current Balance</h3>
+                        <div class="balance-amount" id="display-balance">$0.00</div>
+                    </div>
+                    
+                    <div class="transaction-history">
+                        <h3>Recent Transactions</h3>
+                        <div id="transaction-list" class="transaction-list"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- User Login Page -->
+        <section id="user-login-page" class="page">
+            <div class="form-container">
+                <div class="form-header">
+                    <h2>User Portal</h2>
+                    <p>Login to manage your card</p>
+                </div>
+                
+                <form id="user-login-form" class="user-form">
+                    <div class="form-group">
+                        <label for="user-card-number">Card Number</label>
+                        <input type="text" id="user-card-number" placeholder="1234 5678 9012 3456" maxlength="19" required>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="user-exp-month">Expiration Month</label>
+                            <select id="user-exp-month" required>
+                                <option value="">Month</option>
+                                <option value="01">01</option>
+                                <option value="02">02</option>
+                                <option value="03">03</option>
+                                <option value="04">04</option>
+                                <option value="05">05</option>
+                                <option value="06">06</option>
+                                <option value="07">07</option>
+                                <option value="08">08</option>
+                                <option value="09">09</option>
+                                <option value="10">10</option>
+                                <option value="11">11</option>
+                                <option value="12">12</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="user-exp-year">Expiration Year</label>
+                            <select id="user-exp-year" required>
+                                <option value="">Year</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="user-cvv">CVV</label>
+                        <input type="text" id="user-cvv" placeholder="123" maxlength="4" required>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">
+                        <span class="btn-text">Login with Card</span>
+                        <span class="btn-loader" style="display: none;">
+                            <div class="spinner"></div>
+                        </span>
+                    </button>
+                    
+                    <div class="divider">
+                        <span>OR</span>
+                    </div>
+                    
+                    <button type="button" class="google-signin-btn" onclick="handleGoogleSignIn()">
+                        <svg width="18" height="18" viewBox="0 0 18 18">
+                            <path fill="#4285F4" d="M16.51 8H8.98v3h4.3c-.18 1-.74 1.48-1.6 2.04v2.01h2.6a7.8 7.8 0 0 0 2.38-5.88c0-.57-.05-.66-.15-1.18z"/>
+                            <path fill="#34A853" d="M8.98 17c2.16 0 3.97-.72 5.3-1.94l-2.6-2.04a4.8 4.8 0 0 1-2.7.75c-2.08 0-3.84-1.4-4.48-3.29H1.83v2.07A8 8 0 0 0 8.98 17z"/>
+                            <path fill="#FBBC05" d="M4.5 10.48A4.8 4.8 0 0 1 4.5 7.53V5.46H1.83a8 8 0 0 0 0 7.12l2.67-2.1z"/>
+                            <path fill="#EA4335" d="M8.98 3.8c1.17 0 2.23.4 3.06 1.2l2.3-2.3A7.68 7.68 0 0 0 8.98 1 8 8 0 0 0 1.83 5.46L4.5 7.53c.64-1.9 2.4-3.29 4.48-3.29z"/>
+                        </svg>
+                        Sign in with Google
+                    </button>
+                    
+                    <div class="error-message" id="user-login-error"></div>
+                </form>
+            </div>
+        </section>
+
+        <!-- User Dashboard -->
+        <section id="user-dashboard-page" class="page">
+            <div class="user-container">
+                <div class="user-header">
+                    <h2>Your Card Dashboard</h2>
+                    <button class="logout-btn" onclick="userLogout()">Logout</button>
+                </div>
+                
+                <div class="dashboard-overview">
+                    <div class="card-overview">
+                        <h3>Card Information</h3>
+                        <div class="card-display">
+                            <p><strong>Card Number:</strong> <span id="user-card-number-display"></span></p>
+                            <p><strong>Cardholder:</strong> <span id="user-cardholder-display"></span></p>
+                            <p><strong>Expiration:</strong> <span id="user-expiration-display"></span></p>
+                            <div class="balance-display-user">
+                                <h4>Current Balance</h4>
+                                <div class="balance-amount" id="user-balance-display">$0.00</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="user-actions">
+                    <div class="action-tabs">
+                        <button class="tab-btn active" onclick="showUserTab('transfer')">Transfer Money</button>
+                        <button class="tab-btn" onclick="showUserTab('withdraw')">Withdraw</button>
+                        <button class="tab-btn" onclick="showUserTab('history')">Transaction History</button>
+                    </div>
+                    
+                    <!-- Transfer Money Tab -->
+                    <div id="transfer-tab" class="tab-content active">
+                        <div class="transfer-form-container">
+                            <h3>Transfer Money</h3>
+                            <form id="transfer-form" class="transfer-form">
+                                <div class="form-group" id="transfer-from-card-group" style="display: none;">
+                                    <label for="transfer-from-card">From Card</label>
+                                    <select id="transfer-from-card" required>
+                                        <option value="">Select card to transfer from</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="transfer-to-card">Recipient Card Number</label>
+                                    <input type="text" id="transfer-to-card" placeholder="1234 5678 9012 3456" maxlength="19" required>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="transfer-amount">Amount</label>
+                                        <input type="number" id="transfer-amount" step="0.01" min="0.01" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="transfer-description">Description</label>
+                                        <input type="text" id="transfer-description" placeholder="Transfer description" required>
+                                    </div>
+                                </div>
+                                
+                                <button type="submit" class="submit-btn">
+                                    <span class="btn-text">Transfer Money</span>
+                                    <span class="btn-loader" style="display: none;">
+                                        <div class="spinner"></div>
+                                    </span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <!-- Withdraw Tab -->
+                    <div id="withdraw-tab" class="tab-content">
+                        <div class="withdraw-form-container">
+                            <h3>Withdraw Money</h3>
+                            <form id="withdraw-form" class="withdraw-form">
+                                <div class="form-group" id="withdraw-from-card-group" style="display: none;">
+                                    <label for="withdraw-from-card">From Card</label>
+                                    <select id="withdraw-from-card" required>
+                                        <option value="">Select card to withdraw from</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="withdraw-amount">Amount</label>
+                                        <input type="number" id="withdraw-amount" step="0.01" min="0.01" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="withdraw-description">Description</label>
+                                        <input type="text" id="withdraw-description" placeholder="Withdrawal description" required>
+                                    </div>
+                                </div>
+                                
+                                <button type="submit" class="submit-btn">
+                                    <span class="btn-text">Withdraw</span>
+                                    <span class="btn-loader" style="display: none;">
+                                        <div class="spinner"></div>
+                                    </span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <!-- Transaction History Tab -->
+                    <div id="history-tab" class="tab-content">
+                        <div class="history-container">
+                            <h3>Transaction History</h3>
+                            <div id="user-transaction-history" class="user-transaction-list"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Admin Login Page -->
+        <section id="admin-login-page" class="page">
+            <div class="form-container">
+                <div class="form-header">
+                    <h2>Admin Portal</h2>
+                    <p>Authorized personnel only</p>
+                </div>
+                
+                <form id="admin-login-form" class="admin-form">
+                    <div class="form-group">
+                        <label for="admin-username">Username</label>
+                        <input type="text" id="admin-username" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="admin-password">Password</label>
+                        <input type="password" id="admin-password" required>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">
+                        <span class="btn-text">Login</span>
+                        <span class="btn-loader" style="display: none;">
+                            <div class="spinner"></div>
+                        </span>
+                    </button>
+                    <div class="error-message" id="admin-login-error"></div>
+                </form>
+            </div>
+        </section>
+
+        <!-- Admin Dashboard -->
+        <section id="admin-dashboard-page" class="page">
+            <div class="admin-container">
+                <div class="admin-header">
+                    <h2>Admin Dashboard</h2>
+                    <button class="logout-btn" onclick="logout()">Logout</button>
+                </div>
+                
+                <div class="admin-tabs">
+                    <button class="tab-btn active" onclick="showTab('cards')">Card Management</button>
+                    <button class="tab-btn" onclick="showTab('transactions')">Transaction Entry</button>
+                </div>
+                
+                <!-- Card Management Tab -->
+                <div id="cards-tab" class="tab-content active">
+                    <div class="admin-actions">
+                        <button class="action-btn" onclick="showAddCardForm()">Add New Card</button>
+                        <button class="action-btn" onclick="refreshCardTable()">Refresh</button>
+                    </div>
+                    
+                    <div id="add-card-form" class="add-card-form" style="display: none;">
+                        <h3>Add New Card</h3>
+                        <form id="new-card-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="new-card-number">Card Number</label>
+                                    <input type="text" id="new-card-number" maxlength="19" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="new-cardholder">Cardholder Name</label>
+                                    <input type="text" id="new-cardholder" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="new-exp-month">Expiration Month</label>
+                                    <select id="new-exp-month" required>
+                                        <option value="">Month</option>
+                                        <option value="01">01</option>
+                                        <option value="02">02</option>
+                                        <option value="03">03</option>
+                                        <option value="04">04</option>
+                                        <option value="05">05</option>
+                                        <option value="06">06</option>
+                                        <option value="07">07</option>
+                                        <option value="08">08</option>
+                                        <option value="09">09</option>
+                                        <option value="10">10</option>
+                                        <option value="11">11</option>
+                                        <option value="12">12</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="new-exp-year">Expiration Year</label>
+                                    <select id="new-exp-year" required></select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="new-cvv">CVV</label>
+                                    <input type="text" id="new-cvv" maxlength="4" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="new-balance">Initial Balance</label>
+                                    <input type="number" id="new-balance" step="0.01" value="0.00" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-actions">
+                                <button type="submit" class="submit-btn">
+                                    <span class="btn-text">Add Card</span>
+                                    <span class="btn-loader" style="display: none;">
+                                        <div class="spinner"></div>
+                                    </span>
+                                </button>
+                                <button type="button" class="cancel-btn" onclick="hideAddCardForm()">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <div class="card-table-container">
+                        <table id="card-table" class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Card Number</th>
+                                    <th>Cardholder</th>
+                                    <th>Expiration</th>
+                                    <th>Balance</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="card-table-body">
+                                <!-- Cards will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Transaction Entry Tab -->
+                <div id="transactions-tab" class="tab-content">
+                    <div class="transaction-form-container">
+                        <h3>Add New Transaction</h3>
+                        <form id="transaction-form" class="transaction-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="transaction-card">Select Card</label>
+                                    <select id="transaction-card" required>
+                                        <option value="">Select a card...</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="transaction-type">Transaction Type</label>
+                                    <select id="transaction-type" required>
+                                        <option value="">Select type...</option>
+                                        <option value="deposit">Deposit</option>
+                                        <option value="withdrawal">Withdrawal</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="transaction-amount">Amount</label>
+                                    <input type="number" id="transaction-amount" step="0.01" min="0.01" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="transaction-date">Date</label>
+                                    <input type="date" id="transaction-date" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="transaction-description">Description</label>
+                                <input type="text" id="transaction-description" placeholder="Enter transaction description" required>
+                            </div>
+                            
+                            <button type="submit" class="submit-btn">
+                                <span class="btn-text">Add Transaction</span>
+                                <span class="btn-loader" style="display: none;">
+                                    <div class="spinner"></div>
+                                </span>
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <div class="transaction-history-admin">
+                        <h3>All Transactions</h3>
+                        <div id="admin-transaction-list" class="admin-transaction-list"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Card Details Modal -->
+    <div id="card-details-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Card Details</h3>
+                <span class="close" onclick="closeModal('card-details-modal')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="card-visual">
+                    <div class="card-chip"></div>
+                    <div class="card-number" id="modal-card-number"></div>
+                    <div class="card-holder" id="modal-card-holder"></div>
+                    <div class="card-expiry" id="modal-card-expiry"></div>
+                </div>
+                <div class="card-balance-info">
+                    <h4>Current Balance</h4>
+                    <div class="balance-amount" id="modal-balance-amount">$0.00</div>
+                </div>
+                <div class="card-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">Total Deposits</span>
+                        <span class="stat-value" id="modal-total-deposits">$0.00</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Total Withdrawals</span>
+                        <span class="stat-value" id="modal-total-withdrawals">$0.00</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Transaction Count</span>
+                        <span class="stat-value" id="modal-transaction-count">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Transaction Details Modal -->
+    <div id="transaction-details-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Transaction Details</h3>
+                <span class="close" onclick="closeModal('transaction-details-modal')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="transaction-details-content">
+                    <div class="transaction-info">
+                        <div class="info-row">
+                            <span class="info-label">Transaction ID:</span>
+                            <span class="info-value" id="modal-transaction-id"></span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Date:</span>
+                            <span class="info-value" id="modal-transaction-date"></span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Type:</span>
+                            <span class="info-value" id="modal-transaction-type"></span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Amount:</span>
+                            <span class="info-value" id="modal-transaction-amount"></span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Card:</span>
+                            <span class="info-value" id="modal-transaction-card"></span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Description:</span>
+                            <span class="info-value" id="modal-transaction-description"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    
+    <!-- Application Scripts -->
+    <script src="firebase-config.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

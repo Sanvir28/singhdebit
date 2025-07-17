@@ -1,0 +1,19 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Allow read/write access to cards collection
+    match /cards/{cardId} {
+      allow read, write: if true;
+    }
+    
+    // Allow read/write access to transactions collection
+    match /transactions/{transactionId} {
+      allow read, write: if true;
+    }
+    
+    // Allow read/write access to admin collection (for future use)
+    match /admin/{adminId} {
+      allow read, write: if true;
+    }
+  }
+}
