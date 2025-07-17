@@ -581,3 +581,28 @@ document.addEventListener('click', function(event) {
         setTimeout(displayAllTransactions, 100);
     }
 });
+
+// --- Firestore Card Save Example ---
+function saveCardData(cardId, username, balance) {
+    db.collection("cards").doc(cardId).set({
+        username: username,
+        balance: balance
+    }).then(() => {
+        console.log("Card data saved!");
+    }).catch((error) => {
+        console.error("Error saving card data:", error);
+    });
+}
+
+// --- Firestore Card Load Example ---
+function loadAllCards() {
+    db.collection("cards").get().then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            console.log("Card ID:", doc.id, "Data:", data);
+            // Update your HTML with this data if needed
+        });
+    }).catch((error) => {
+        console.error("Error loading card data:", error);
+    });
+}
