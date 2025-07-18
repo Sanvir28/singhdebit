@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecureBank - Transactions</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/modal.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="2" y="8" width="28" height="16" rx="4" fill="#3b82f6"/>
+                    <rect x="6" y="12" width="20" height="2" fill="#ffffff"/>
+                    <rect x="6" y="16" width="12" height="1.5" fill="#ffffff" opacity="0.8"/>
+                    <rect x="6" y="19" width="8" height="1.5" fill="#ffffff" opacity="0.6"/>
+                </svg>
+                <span>SecureBank</span>
+            </div>
+            <nav class="nav">
+                <a href="index.html" class="nav-link">Create Card</a>
+                <a href="balance.html" class="nav-link">Check Balance</a>
+                <a href="transactions.html" class="nav-link active">Transactions</a>
+                <a href="admin.html" class="nav-link">Admin</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            <section class="hero">
+                <h1>Make a Transaction</h1>
+                <p>Transfer money, make payments, or add funds to your card</p>
+            </section>
+
+            <section class="transaction-form-section">
+                <div class="transaction-container">
+                    <!-- Card Authentication -->
+                    <div id="authSection" class="auth-section">
+                        <h2>Authenticate Your Card</h2>
+                        <form id="authForm" class="auth-form">
+                            <div class="form-group">
+                                <label for="authCardNumber">Card Number</label>
+                                <input type="text" id="authCardNumber" name="authCardNumber" required 
+                                       placeholder="1234 5678 9012 3456" maxlength="19">
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="authExpiryDate">Expiry Date</label>
+                                    <input type="text" id="authExpiryDate" name="authExpiryDate" required 
+                                           placeholder="MM/YY" maxlength="5">
+                                </div>
+                                <div class="form-group">
+                                    <label for="authCvv">CVV</label>
+                                    <input type="text" id="authCvv" name="authCvv" required 
+                                           placeholder="123" maxlength="4">
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">Authenticate Card</button>
+                            <div id="authError" class="error-message"></div>
+                        </form>
+                    </div>
+
+                    <!-- Transaction Form -->
+                    <div id="transactionSection" class="transaction-section" style="display: none;">
+                        <div class="card-info-display">
+                            <h3>Card Information</h3>
+                            <div class="card-summary">
+                                <div class="card-mini">
+                                    <div class="card-mini-number" id="displayCardNumber">•••• •••• •••• ••••</div>
+                                    <div class="card-mini-holder" id="displayCardholder">CARDHOLDER NAME</div>
+                                </div>
+                                <div class="balance-display">
+                                    <span class="balance-label">Available Balance</span>
+                                    <span class="balance-amount" id="displayBalance">$0.00</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <form id="transactionForm" class="transaction-form">
+                            <div class="form-group">
+                                <label for="transactionType">Transaction Type</label>
+                                <select id="transactionType" name="transactionType" required>
+                                    <option value="">Select transaction type</option>
+                                    <option value="transfer">Transfer Money</option>
+                                    <option value="payment">Make Payment</option>
+                                    <option value="deposit">Add Funds</option>
+                                    <option value="withdrawal">Withdraw Funds</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group" id="recipientGroup" style="display: none;">
+                                <label for="recipient">Recipient</label>
+                                <input type="text" id="recipient" name="recipient" 
+                                       placeholder="Enter recipient name or account">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="amount">Amount ($)</label>
+                                <input type="number" id="amount" name="amount" required 
+                                       min="0.01" max="10000" step="0.01" placeholder="0.00">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="description">Description</label>
+                                <input type="text" id="description" name="description" 
+                                       placeholder="Payment description (optional)" maxlength="100">
+                            </div>
+
+                            <div class="transaction-summary" id="transactionSummary" style="display: none;">
+                                <h4>Transaction Summary</h4>
+                                <div class="summary-details">
+                                    <div class="summary-row">
+                                        <span>Type:</span>
+                                        <span id="summaryType">-</span>
+                                    </div>
+                                    <div class="summary-row">
+                                        <span>Amount:</span>
+                                        <span id="summaryAmount">$0.00</span>
+                                    </div>
+                                    <div class="summary-row">
+                                        <span>Fee:</span>
+                                        <span id="summaryFee">$0.00</span>
+                                    </div>
+                                    <div class="summary-row total">
+                                        <span>Total:</span>
+                                        <span id="summaryTotal">$0.00</span>
+                                    </div>
+                                    <div class="summary-row">
+                                        <span>New Balance:</span>
+                                        <span id="summaryNewBalance">$0.00</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="button" class="btn btn-secondary" onclick="resetTransaction()">Back to Authentication</button>
+                                <button type="submit" class="btn btn-primary">Process Transaction</button>
+                            </div>
+                            <div id="transactionError" class="error-message"></div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Transaction Success Modal -->
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Transaction Successful</h2>
+                <span class="close" onclick="closeSuccessModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="success-icon">✅</div>
+                <div class="transaction-details">
+                    <div class="detail-item">
+                        <label>Transaction ID:</label>
+                        <span id="modalTransactionId">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>Type:</label>
+                        <span id="modalTransactionType">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>Amount:</label>
+                        <span id="modalTransactionAmount">$0.00</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>Date:</label>
+                        <span id="modalTransactionDate">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>New Balance:</label>
+                        <span id="modalNewBalance">$0.00</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeSuccessModal()">Close</button>
+                <button class="btn btn-primary" onclick="downloadReceipt()">Download Receipt</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 SecureBank. All rights reserved. | <a href="#privacy">Privacy Policy</a> | <a href="#terms">Terms of Service</a></p>
+        </div>
+    </footer>
+
+    <script src="scripts/storage.js"></script>
+    <script src="scripts/card-generator.js"></script>
+    <script src="scripts/transactions.js"></script>
+</body>
+</html>

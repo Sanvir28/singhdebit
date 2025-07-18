@@ -1,116 +1,82 @@
-# SinghDebit - Debit Card Portal
+# SecureBank - Debit Card Management System
 
 ## Overview
-
-SinghDebit is a client-side web application that simulates a banking portal for debit card management, developed by Singh Studios. The system allows users to check card balances, view transaction history, and provides admin functionality for managing cards and transactions. The application uses local storage for data persistence and implements a simple authentication system for admin access.
+SecureBank is a client-side web application that simulates a debit card management system. It provides functionality for creating virtual debit cards, checking balances, and administrative management through a clean, modern web interface. The application is built entirely with vanilla HTML, CSS, and JavaScript, using local storage for data persistence.
 
 ## User Preferences
-
 Preferred communication style: Simple, everyday language.
 
 ## System Architecture
+The application follows a traditional client-side architecture with a multi-page layout:
 
-### Frontend Architecture
-- **Single Page Application (SPA)**: Built with vanilla HTML, CSS, and JavaScript
-- **Client-Side Rendering**: All content is dynamically generated and managed through JavaScript
-- **Local Storage**: Data persistence using browser's localStorage API
-- **Responsive Design**: Mobile-first approach with CSS Grid and Flexbox
-
-### Data Storage
-- **Browser Local Storage**: Primary data storage for cards and transactions
-- **In-Memory State**: Application state managed through JavaScript objects
-- **No Backend**: Fully client-side application with no server dependencies
-
-### Authentication System
-- **Admin Authentication**: Simple username/password system stored in JavaScript constants
-- **Session Management**: Basic session handling for admin access
-- **No User Authentication**: Regular users access card information directly through card details
+- **Frontend**: Pure HTML/CSS/JavaScript without frameworks
+- **Data Storage**: Browser LocalStorage for persistence
+- **Architecture Pattern**: Modular JavaScript with class-based components
+- **Styling**: Custom CSS with modern design principles and responsive layout
+- **Navigation**: Multi-page application with shared header navigation
 
 ## Key Components
 
-### 1. Navigation System
-- **Purpose**: Provides navigation between different application pages
-- **Implementation**: Button-based navigation with JavaScript page switching
-- **Pages**: Home, Check Balance, Admin Login
+### Frontend Structure
+- **Main Pages**: 
+  - `index.html` - Card creation interface
+  - `balance.html` - Balance checking interface  
+  - `admin.html` - Administrative panel
+- **Styling**: Modular CSS approach with `main.css` for global styles and `modal.css` for modal components
+- **Scripts**: Feature-based JavaScript modules for specific functionality
 
-### 2. Card Management
-- **Balance Checking**: Users can check card balance by entering card number and expiration date
-- **Card Creation**: Admin can create new debit cards with initial balances
-- **Card Validation**: Basic validation for card number format and expiration dates
+### JavaScript Modules
+- **`card-generator.js`**: Handles card number generation using Luhn algorithm validation
+- **`storage.js`**: Manages localStorage operations for cards, admin data, and transactions
+- **`main.js`**: Controls card creation form and preview functionality
+- **`balance.js`**: Manages balance checking and transaction history
+- **`admin.js`**: Provides administrative interface for card management
 
-### 3. Transaction Management
-- **Transaction Recording**: Admin can add transactions to existing cards
-- **Transaction History**: Users can view transaction history for their cards
-- **Balance Updates**: Automatic balance calculation based on transaction history
-
-### 4. Admin Panel
-- **Authentication**: Simple login system with hardcoded credentials
-- **Card Management**: Create new cards, view all cards
-- **Transaction Management**: Add transactions to existing cards
-- **Data Overview**: View all cards and transactions in tabular format
+### Data Models
+The application manages three main data types in localStorage:
+- **Cards**: Card details, balances, and metadata
+- **Admin**: Authentication credentials and session data
+- **Transactions**: Transaction history for balance tracking
 
 ## Data Flow
 
-### User Flow
-1. **Card Balance Check**: User enters card details → System validates → Displays balance and transactions
-2. **Navigation**: User clicks navigation buttons → JavaScript switches page visibility
-3. **Data Retrieval**: Application reads from localStorage → Processes data → Displays results
+### Card Creation Flow
+1. User fills out card creation form (name, type, initial balance)
+2. Card generator creates valid card number using Luhn algorithm
+3. Card preview updates in real-time
+4. Form submission stores card data in localStorage
+5. Success modal displays generated card details
 
-### Admin Flow
-1. **Login**: Admin enters credentials → System validates → Grants access to admin panel
-2. **Card Creation**: Admin fills form → System validates → Creates card → Saves to localStorage
-3. **Transaction Addition**: Admin selects card → Enters transaction details → Updates card balance → Saves to localStorage
+### Balance Check Flow
+1. User enters card credentials (number, expiry, CVV)
+2. System validates card format and existence
+3. Current balance and transaction history retrieved from storage
+4. Balance information displayed with transaction history option
 
-### Data Persistence
-- **Save Operations**: All data changes immediately written to localStorage
-- **Load Operations**: Data loaded from localStorage on page refresh
-- **State Management**: In-memory objects synchronized with localStorage
+### Admin Management Flow
+1. Admin authentication using default credentials
+2. Dashboard displays all cards with filtering and search capabilities
+3. CRUD operations for card management
+4. Real-time updates to localStorage
 
 ## External Dependencies
-
-### Fonts
-- **Google Fonts**: Crimson Text and Inter font families for typography
-- **Purpose**: Enhanced visual design and readability
-
-### No Other Dependencies
-- **Pure JavaScript**: No frameworks or libraries used
-- **Native APIs**: Relies solely on browser APIs (localStorage, DOM manipulation)
-- **Self-Contained**: All functionality implemented within the application
+- **Google Fonts**: Inter and JetBrains Mono font families
+- **No JavaScript frameworks**: Pure vanilla JavaScript implementation
+- **No backend services**: Completely client-side application
 
 ## Deployment Strategy
+The application is designed for static hosting and can be deployed to any web server or static hosting service:
 
-### Static Hosting
-- **Hosting Type**: Can be deployed to any static hosting service
-- **Files Required**: HTML, CSS, JavaScript files only
-- **No Build Process**: Direct deployment of source files
-- **No Server Requirements**: Client-side only application
-
-### Browser Requirements
-- **Modern Browser**: Requires support for ES6+ JavaScript features
-- **Local Storage**: Must support localStorage API
-- **CSS Grid/Flexbox**: For responsive layout
+- **Requirements**: Any web server capable of serving static files
+- **Build Process**: None required - direct file deployment
+- **Configuration**: No server-side configuration needed
+- **Browser Compatibility**: Modern browsers with localStorage support
 
 ### Security Considerations
-- **Client-Side Only**: All data stored in user's browser
-- **No Server Communication**: No network requests or data transmission
-- **Demo Purpose**: Hardcoded admin credentials suitable for demonstration only
+- Default admin credentials are hardcoded (admin/securebank123)
+- All data stored in browser localStorage (not suitable for production)
+- No encryption for stored card data
+- Client-side validation only
 
-## Key Design Decisions
-
-### Local Storage Choice
-- **Problem**: Need for data persistence without backend
-- **Solution**: Browser localStorage for simple data storage
-- **Rationale**: Simplifies deployment and eliminates server requirements
-- **Limitation**: Data is device-specific and not shared across browsers
-
-### Single Page Application
-- **Problem**: Need for multiple views and navigation
-- **Solution**: JavaScript-based page switching with show/hide functionality
-- **Rationale**: Maintains fast navigation and simple deployment
-- **Trade-off**: Limited SEO capabilities and browser history management
-
-### Client-Side Authentication
-- **Problem**: Need for admin access control
-- **Solution**: Simple JavaScript-based authentication with hardcoded credentials
-- **Rationale**: Sufficient for demo purposes and maintains simplicity
-- **Security Note**: Not suitable for production use
+### Scalability Notes
+The current localStorage-based approach is suitable for demonstration purposes but would need migration to a proper backend database system for production use. The modular JavaScript architecture supports future migration to a framework-based approach if needed.

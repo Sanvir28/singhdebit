@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecureBank - Admin Panel</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/modal.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="2" y="8" width="28" height="16" rx="4" fill="#1e40af"/>
+                    <rect x="6" y="12" width="20" height="2" fill="#ffffff"/>
+                    <rect x="6" y="16" width="12" height="1.5" fill="#ffffff" opacity="0.8"/>
+                    <rect x="6" y="19" width="8" height="1.5" fill="#ffffff" opacity="0.6"/>
+                </svg>
+                <span>SecureBank</span>
+            </div>
+            <nav class="nav">
+                <a href="index.html" class="nav-link">Create Card</a>
+                <a href="balance.html" class="nav-link">Check Balance</a>
+                <a href="transactions.html" class="nav-link">Transactions</a>
+                <a href="admin.html" class="nav-link active">Admin</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            <!-- Login Form -->
+            <section id="loginSection" class="login-section">
+                <div class="login-container">
+                    <h1>Admin Login</h1>
+                    <form id="loginForm" class="login-form">
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input type="text" id="username" name="username" required placeholder="Enter username">
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" id="password" name="password" required placeholder="Enter password">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Login</button>
+                        <div id="loginError" class="error-message"></div>
+                    </form>
+                    <div class="login-hint">
+                        <p>Default credentials: admin / securebank123</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Admin Dashboard -->
+            <section id="dashboardSection" class="dashboard-section" style="display: none;">
+                <div class="dashboard-header">
+                    <h1>Card Management Dashboard</h1>
+                    <div class="dashboard-actions">
+                        <button class="btn btn-secondary" onclick="exportData()">Export Data</button>
+                        <button class="btn btn-danger" onclick="logout()">Logout</button>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">📊</div>
+                        <div class="stat-info">
+                            <h3 id="totalCards">0</h3>
+                            <p>Total Cards</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">💰</div>
+                        <div class="stat-info">
+                            <h3 id="totalBalance">$0.00</h3>
+                            <p>Total Balance</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">✅</div>
+                        <div class="stat-info">
+                            <h3 id="activeCards">0</h3>
+                            <p>Active Cards</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📅</div>
+                        <div class="stat-info">
+                            <h3 id="todayCards">0</h3>
+                            <p>Created Today</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <div class="table-header">
+                        <h2>All Cards</h2>
+                        <div class="table-filters">
+                            <input type="text" id="searchInput" placeholder="Search cards..." class="search-input">
+                            <select id="statusFilter" class="filter-select">
+                                <option value="">All Status</option>
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                            <select id="typeFilter" class="filter-select">
+                                <option value="">All Types</option>
+                                <option value="visa">Visa</option>
+                                <option value="mastercard">Mastercard</option>
+                                <option value="amex">American Express</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="table-wrapper">
+                        <table id="cardsTable" class="cards-table">
+                            <thead>
+                                <tr>
+                                    <th>Card ID</th>
+                                    <th>Cardholder</th>
+                                    <th>Card Number</th>
+                                    <th>Type</th>
+                                    <th>Balance</th>
+                                    <th>Status</th>
+                                    <th>Created</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="cardsTableBody">
+                                <!-- Cards will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Card Edit Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Card</h2>
+                <span class="close" onclick="closeEditModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="editForm" class="edit-form">
+                    <input type="hidden" id="editCardId">
+                    <div class="form-group">
+                        <label for="editCardholderName">Cardholder Name</label>
+                        <input type="text" id="editCardholderName" required maxlength="25">
+                    </div>
+                    <div class="form-group">
+                        <label for="editBalance">Balance ($)</label>
+                        <input type="number" id="editBalance" min="0" max="50000" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label for="editStatus">Status</label>
+                        <select id="editStatus">
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeEditModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveCardEdit()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Card View Modal -->
+    <div id="viewModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Card Details</h2>
+                <span class="close" onclick="closeViewModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="card-view-container">
+                    <div class="card-display">
+                        <div class="card-front-full">
+                            <div class="card-chip"></div>
+                            <div class="card-number-full" id="viewCardNumber">•••• •••• •••• ••••</div>
+                            <div class="card-info-full">
+                                <div class="cardholder-full" id="viewCardholder">CARDHOLDER NAME</div>
+                                <div class="expiry-full" id="viewExpiry">MM/YY</div>
+                            </div>
+                            <div class="card-logo-full" id="viewCardLogo"></div>
+                        </div>
+                        <div class="card-back">
+                            <div class="magnetic-strip"></div>
+                            <div class="cvv-area">
+                                <span>CVV</span>
+                                <span id="viewCvv">•••</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-details">
+                        <div class="detail-item">
+                            <label>Card ID:</label>
+                            <span id="viewCardId"></span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Balance:</label>
+                            <span id="viewBalance"></span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Status:</label>
+                            <span id="viewStatus"></span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Created:</label>
+                            <span id="viewCreated"></span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Last Modified:</label>
+                            <span id="viewModified"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeViewModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 SecureBank. All rights reserved. | <a href="#privacy">Privacy Policy</a> | <a href="#terms">Terms of Service</a></p>
+        </div>
+    </footer>
+
+    <script src="scripts/storage.js"></script>
+    <script src="scripts/card-generator.js"></script>
+    <script src="scripts/admin.js"></script>
+</body>
+</html>

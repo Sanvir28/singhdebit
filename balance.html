@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecureBank - Balance Check</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/modal.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="2" y="8" width="28" height="16" rx="4" fill="#1e40af"/>
+                    <rect x="6" y="12" width="20" height="2" fill="#ffffff"/>
+                    <rect x="6" y="16" width="12" height="1.5" fill="#ffffff" opacity="0.8"/>
+                    <rect x="6" y="19" width="8" height="1.5" fill="#ffffff" opacity="0.6"/>
+                </svg>
+                <span>SecureBank</span>
+            </div>
+            <nav class="nav">
+                <a href="index.html" class="nav-link">Create Card</a>
+                <a href="balance.html" class="nav-link active">Check Balance</a>
+                <a href="transactions.html" class="nav-link">Transactions</a>
+                <a href="admin.html" class="nav-link">Admin</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            <section class="hero">
+                <h1>Check Card Balance</h1>
+                <p>Enter your card details to view your current balance</p>
+            </section>
+
+            <section class="balance-form-section">
+                <div class="balance-container">
+                    <form id="balanceForm" class="balance-form">
+                        <div class="form-group">
+                            <label for="cardNumber">Card Number</label>
+                            <input type="text" id="cardNumber" name="cardNumber" required 
+                                   placeholder="1234 5678 9012 3456" maxlength="19"
+                                   pattern="[0-9\s]{13,19}">
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="expiryDate">Expiry Date</label>
+                                <input type="text" id="expiryDate" name="expiryDate" required 
+                                       placeholder="MM/YY" maxlength="5">
+                            </div>
+                            <div class="form-group">
+                                <label for="cvv">CVV</label>
+                                <input type="text" id="cvv" name="cvv" required 
+                                       placeholder="123" maxlength="4">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Check Balance</button>
+                        <div id="balanceError" class="error-message"></div>
+                    </form>
+                </div>
+            </section>
+
+            <section id="balanceResult" class="balance-result" style="display: none;">
+                <div class="result-container">
+                    <div class="balance-card">
+                        <div class="balance-header">
+                            <h2>Account Balance</h2>
+                            <div class="card-type" id="resultCardType"></div>
+                        </div>
+                        <div class="balance-amount">
+                            <span class="currency">$</span>
+                            <span class="amount" id="balanceAmount">0.00</span>
+                        </div>
+                        <div class="balance-details">
+                            <div class="detail-row">
+                                <span class="label">Card Number:</span>
+                                <span class="value" id="resultCardNumber">•••• •••• •••• ••••</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="label">Cardholder:</span>
+                                <span class="value" id="resultCardholder">•••••••••</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="label">Status:</span>
+                                <span class="value status" id="resultStatus">Active</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="label">Last Updated:</span>
+                                <span class="value" id="resultLastUpdated">••••••••••</span>
+                            </div>
+                        </div>
+                        <div class="balance-actions">
+                            <button class="btn btn-secondary" onclick="resetForm()">Check Another Card</button>
+                            <button class="btn btn-primary" onclick="showTransactionHistory()">View History</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Transaction History Modal -->
+    <div id="historyModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Transaction History</h2>
+                <span class="close" onclick="closeHistoryModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="transaction-list" id="transactionList">
+                    <div class="no-transactions">
+                        <p>No transactions found for this card.</p>
+                        <small>Transaction history will appear here once card is used.</small>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeHistoryModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 SecureBank. All rights reserved. | <a href="#privacy">Privacy Policy</a> | <a href="#terms">Terms of Service</a></p>
+        </div>
+    </footer>
+
+    <script src="scripts/storage.js"></script>
+    <script src="scripts/card-generator.js"></script>
+    <script src="scripts/balance.js"></script>
+</body>
+</html>
