@@ -1,5 +1,5 @@
 # SecureBank - Debit Card Management System
-
+Default credentials: admin / securebank123
 ## Overview
 SecureBank is a client-side web application that simulates a debit card management system. It provides functionality for creating virtual debit cards, checking balances, and administrative management through a clean, modern web interface. The application is built entirely with vanilla HTML, CSS, and JavaScript, using local storage for data persistence.
 
